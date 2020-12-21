@@ -4,8 +4,8 @@ export const Dropdown = (props: DropdownProps) => {
     return (
         <div className="dropdown">
             <label className="label">{props.label}</label>
-            <select className="select" onChange={event => props.onSelect(event.target.value)}>
-                {props.options.map(option => <option value={option.value} selected={option.selected}>{option.text}</option>)}
+            <select className="select" onChange={event => props.onSelect(props.options[+event.target.value])}>
+                {props.options.map((option, index) => <option value={index}>{option[props.textProperty]}</option>)}
             </select>
         </div>
     )
@@ -13,12 +13,7 @@ export const Dropdown = (props: DropdownProps) => {
 
 interface DropdownProps {
     label: string;
-    options: DropdownOption[];
-    onSelect: (value: any) => void;
-}
-
-export interface DropdownOption {
-    text: string;
-    value: any;
-    selected?: boolean;
+    options: any[];
+    textProperty: string;
+    onSelect: (option: any) => void;
 }

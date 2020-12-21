@@ -7,7 +7,6 @@ import { VideoPoster } from "./video-poster/VideoPoster";
 import { VideoControl } from "./video-control/VideoControl";
 
 export const VideoPlayer = (props: VideoPlayerProps) => {
-    const [videoInfo, setVideoInfo] = useState(props.videoInfo || {});
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isInFullScreenMode, setIsInFullScreenMode] = useState(false);
@@ -18,9 +17,12 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     let videoElementRef = useRef<HTMLVideoElement>(null);
 
     // Events
+    useEffect(() => setIsPlaying(false), [props.videoInfo]);
+
     useEffect(() => {
-        videoPlayerElementRef.current?.addEventListener('webkitfullscreenchange', onFullscreenModeChanged);
-        return () => videoPlayerElementRef.current?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged);
+        const videoPlayerElement = videoPlayerElementRef.current;
+        videoPlayerElement?.addEventListener('webkitfullscreenchange', onFullscreenModeChanged);
+        return () => videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged);
     }, []);
 
     const onLoaded = () => {
@@ -107,7 +109,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
             className={`video-player theme-${props.theme}`} >
             <video
                 ref={videoElementRef}
-                src={videoInfo.videoSrc}
+                src={props.videoInfo.videoSrc}
                 onLoadedData={onLoaded}
                 onPlaying={onPlaying}
                 onTimeUpdate={onTimeUpdated}
@@ -115,8 +117,8 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 Sorry, Your browser does not support HTML5 video feature
             </video>
 
-            { !isPlaying && currentTime === 0 ? <VideoPoster source={videoInfo.posterSrc}></VideoPoster> : null}
-            <VideoTitle title={videoInfo.title}></VideoTitle>
+            { !isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
+            <VideoTitle title={props.videoInfo.title}></VideoTitle>
             <VideoControl
                 currentTime={currentTime}
                 totalTime={totalTime}
