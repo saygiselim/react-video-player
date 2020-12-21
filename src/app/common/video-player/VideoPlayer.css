@@ -1,0 +1,17 @@
+.video-player {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+
+    /* player colors */
+    --primary-color: #61dafb;
+    --secondary-color: #ff6c3b;
+    --light-color: #ffffff;
+    --dark-color: #000000;
+}
+
+.video-player > video {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
