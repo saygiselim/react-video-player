@@ -1,10 +1,21 @@
 .header {
     text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px;
 }
 
-.video-player-wrapper {
+.body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 50px;
+    margin: 10px 20px;
+}
+
+.footer {
+    text-align: center;
+}
+
+.preferences {
+    align-self: flex-start;
 }

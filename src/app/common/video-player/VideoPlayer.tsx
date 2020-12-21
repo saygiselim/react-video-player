@@ -104,7 +104,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     return (
         <div
             ref={videoPlayerElementRef}
-            className="video-player">
+            className={`video-player theme-${props.theme}`} >
             <video
                 ref={videoElementRef}
                 src={videoInfo.videoSrc}
@@ -127,16 +127,23 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 toggleMute={toggleMute}
                 toggleFullscreen={toggleFullscreen}
                 skipToTimePoint={skipToTimePoint}></VideoControl>
-        </div>
+        </div >
     );
 }
 
 interface VideoPlayerProps {
     videoInfo: VideoInfo;
+    theme: VideoPlayerTheme;
 }
 
 export interface VideoInfo {
     title: string;
     posterSrc: string;
     videoSrc: string;
+}
+
+export enum VideoPlayerTheme {
+    Red = 'red',
+    Green = 'green',
+    Blue = 'blue'
 }

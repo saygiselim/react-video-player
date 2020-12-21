@@ -1,0 +1,22 @@
+.dropdown {
+    display: flex;
+    align-items: baseline;
+}
+
+.label {
+    color: #222222;
+    font-weight: bold;
+    margin-right: 3px;
+}
+
+.select {
+    padding: 5px;
+    color: #222222;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+.select:focus {
+    outline: none;
+}

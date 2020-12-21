@@ -2,12 +2,6 @@
     position: relative;
     overflow: hidden;
     padding: 0;
-
-    /* player colors */
-    --primary-color: #61dafb;
-    --secondary-color: #ff6c3b;
-    --light-color: #ffffff;
-    --dark-color: #000000;
 }
 
 .video-player > video {
@@ -15,3 +9,25 @@
     width: 100%;
     height: 100%;
 }
+
+.theme-red {
+    --primary-color: #F44336;
+    --secondary-color: #CACACA;
+    --light-color: #F5F5F5;
+    --dark-color: #212121;
+}
+
+.theme-green {
+    --primary-color: #4CAF50;
+    --secondary-color: #CACACA;
+    --light-color: #F5F5F5;
+    --dark-color: #212121;
+}
+
+.theme-blue {
+    --primary-color: #03A9F4;
+    --secondary-color: #CACACA;
+    --light-color: #F5F5F5;
+    --dark-color: #212121;
+}
+
