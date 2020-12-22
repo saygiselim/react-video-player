@@ -13,9 +13,12 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     const [isInFullScreenMode, setIsInFullScreenMode] = useState(false);
     const [totalTime, setTotalTime] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
+    const [isMouseInIdle, setIsMouseInIdle] = useState(false);
 
     let videoPlayerElementRef = useRef<HTMLDivElement>(null);
     let videoElementRef = useRef<HTMLVideoElement>(null);
+
+    let mouseIdleTimeout: NodeJS.Timeout;
 
     // Events
     useEffect(() => setIsPlaying(false), [props.videoInfo]);
@@ -42,6 +45,15 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
 
     const onEnded = () => {
         setIsPlaying(false);
+    }
+
+    const onMouseMoved = () => {
+        setIsMouseInIdle(false);
+
+        if (mouseIdleTimeout)
+            clearTimeout(mouseIdleTimeout);
+
+        mouseIdleTimeout = setTimeout(() => setIsMouseInIdle(true), 5000);
     }
 
     // Behaviors
@@ -131,22 +143,23 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 onEnded={onEnded}>
                 Sorry, Your browser does not support HTML5 video feature
             </video>
-
-            { !isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
-            <VideoOverlayControl isPlaying={isPlaying} backward={backward} togglePlay={togglePlay} forward={forward}></VideoOverlayControl>
-            <VideoTitle title={props.videoInfo.title}></VideoTitle>
-            <VideoControl
-                currentTime={currentTime}
-                totalTime={totalTime}
-                isPlaying={isPlaying}
-                isMuted={isMuted}
-                isInFullscreen={isInFullScreenMode}
-                backward={backward}
-                togglePlay={togglePlay}
-                forward={forward}
-                toggleMute={toggleMute}
-                toggleFullscreen={toggleFullscreen}
-                skip={skip}></VideoControl>
+            {!isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
+            <div className={`video-overlay ${isMouseInIdle ? 'video-overlay--hidden' : ''}`} onMouseMove={onMouseMoved}>
+                <VideoOverlayControl isPlaying={isPlaying} backward={backward} togglePlay={togglePlay} forward={forward}></VideoOverlayControl>
+                <VideoTitle title={props.videoInfo.title}></VideoTitle>
+                <VideoControl
+                    currentTime={currentTime}
+                    totalTime={totalTime}
+                    isPlaying={isPlaying}
+                    isMuted={isMuted}
+                    isInFullscreen={isInFullScreenMode}
+                    backward={backward}
+                    togglePlay={togglePlay}
+                    forward={forward}
+                    toggleMute={toggleMute}
+                    toggleFullscreen={toggleFullscreen}
+                    skip={skip}></VideoControl>
+            </div>
         </div >
     );
 }
