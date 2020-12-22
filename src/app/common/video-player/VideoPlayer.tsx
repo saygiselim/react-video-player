@@ -5,6 +5,7 @@ import './VideoPlayer.css';
 import { VideoTitle } from "./video-title/VideoTitle";
 import { VideoPoster } from "./video-poster/VideoPoster";
 import { VideoControl } from "./video-control/VideoControl";
+import { VideoOverlayControl } from "./video-overlay-control/VideoOverlayControl";
 
 export const VideoPlayer = (props: VideoPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -103,6 +104,16 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
         setCurrentTime(timeInSeconds);
     }
 
+    const backward = () => {
+        if (currentTime > 10 && videoElementRef.current)
+            videoElementRef.current.currentTime -= 10;
+    }
+
+    const forward = () => {
+        if ((totalTime - currentTime) > 10 && videoElementRef.current)
+            videoElementRef.current.currentTime += 10;
+    }
+
     return (
         <div
             ref={videoPlayerElementRef}
@@ -118,6 +129,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
             </video>
 
             { !isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
+            <VideoOverlayControl isPlaying={isPlaying} backward={ backward} togglePlay={togglePlay} forward={forward}></VideoOverlayControl>
             <VideoTitle title={props.videoInfo.title}></VideoTitle>
             <VideoControl
                 currentTime={currentTime}
