@@ -1,4 +1,4 @@
-import './Dropdown.css';
+import './Dropdown.scss';
 
 export const Dropdown = (props: DropdownProps) => {
     return (

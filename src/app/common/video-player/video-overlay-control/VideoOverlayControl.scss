@@ -1,0 +1,22 @@
+.video-overlay-control {
+    position: absolute;
+    top:0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+
+    .control {
+        display: flex;
+        color: var(--light-color);
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity .5s ease;
+    }
+    
+    .control:hover {
+        opacity: .3;
+    }
+}

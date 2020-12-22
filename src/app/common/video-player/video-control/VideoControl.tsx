@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCompress, faExpand, faPause, faPlay, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
-import './VideoControl.css';
+import './VideoControl.scss';
 
 export const VideoControl = (props: VideoControlProps) => {
     /**
@@ -45,9 +45,9 @@ export const VideoControl = (props: VideoControlProps) => {
 
     return (
         <div className="video-control">
-            <div className="progress-wrapper">
-                <div className="bar" onClick={onBarClicked}>
-                    <div className="bar-filled" style={{ width: getCurrentBarWidth() }} ></div>
+            <div className="seekbar-wrapper">
+                <div className="seekbar" onClick={onBarClicked}>
+                    <div className="seekbar-filled" style={{ width: getCurrentBarWidth() }} ></div>
                 </div>
             </div>
             <div className="control-wrapper">
@@ -55,17 +55,17 @@ export const VideoControl = (props: VideoControlProps) => {
                     <button type="button" className="btn" onClick={props.toggleMute}>
                         <FontAwesomeIcon icon={props.isMuted ? faVolumeMute : faVolumeUp} />
                     </button>
-                    <span className="time time-current">
+                    <span className="time">
                         {getFormattedTime(props.currentTime)}
                     </span>
                 </div>
                 <div className="control">
-                    <button type="button" className="btn" onClick={props.togglePlay}>
-                        <FontAwesomeIcon icon={props.isPlaying ? faPause : faPlay} size="2x" />
+                    <button type="button" className="btn btn-primary" onClick={props.togglePlay}>
+                        <FontAwesomeIcon icon={props.isPlaying ? faPause : faPlay} size="3x" />
                     </button>
                 </div>
                 <div className="control">
-                    <span className="time time-total">
+                    <span className="time">
                         {getFormattedTime(props.totalTime)}
                     </span>
                     <button type="button" className="btn" onClick={props.toggleFullscreen}>

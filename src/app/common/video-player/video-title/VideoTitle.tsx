@@ -1,4 +1,4 @@
-import './VideoTitle.css';
+import './VideoTitle.scss';
 
 export const VideoTitle = (props: VideoTitleProps) => {
     return (

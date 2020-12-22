@@ -1,4 +1,4 @@
-import './VideoPoster.css';
+import './VideoPoster.scss';
 
 export const VideoPoster = (props: VideoPosterProps) => {
     return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import './App.css';
+import './App.scss';
 
 import { Dropdown } from './common/dropdown/Dropdown';
 import { VideoPlayer, VideoInfo, VideoPlayerTheme } from './common/video-player/VideoPlayer';

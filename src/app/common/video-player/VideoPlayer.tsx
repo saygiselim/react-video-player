@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import './VideoPlayer.css';
+import './VideoPlayer.scss';
 
 import { VideoTitle } from "./video-title/VideoTitle";
 import { VideoPoster } from "./video-poster/VideoPoster";
@@ -117,7 +117,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     return (
         <div
             ref={videoPlayerElementRef}
-            className={`video-player theme-${props.theme}`} >
+            className={`video-player theme theme-${props.theme}`} >
             <video
                 ref={videoElementRef}
                 src={props.videoInfo.videoSrc}
