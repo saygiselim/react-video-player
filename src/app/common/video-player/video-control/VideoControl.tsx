@@ -1,9 +1,32 @@
+import { useEffect } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCompress, faExpand, faPause, faPlay, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
+import { faBackward, faCompress, faExpand, faForward, faPause, faPlay, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
 import './VideoControl.scss';
 
 export const VideoControl = (props: VideoControlProps) => {
+    useEffect(() => {
+        document.addEventListener('keydown', onKeydown);
+        return () => document.removeEventListener('keydown', onKeydown);
+    }, [props.isPlaying, props.currentTime, props.totalTime]);
+
+    const onKeydown = (event: KeyboardEvent) => {
+        switch (event.key) {
+            case 'ArrowLeft':
+                props.backward();
+                break;
+
+            case ' ':
+                props.togglePlay();
+                break;
+
+            case 'ArrowRight':
+                props.forward();
+                break;
+        }      
+    }
+
     /**
      * Returns formatted time as 00:00:00
      * 
@@ -25,7 +48,7 @@ export const VideoControl = (props: VideoControlProps) => {
      * Returns progress bar width as percentage based on the current time to represent remaining time on the bar
      */
     const getCurrentBarWidth = () => {
-        return `${Math.round((props.currentTime / props.totalTime) * 100)}%`;
+        return `${(props.currentTime / props.totalTime) * 100}%`;
     }
 
     /**
@@ -60,8 +83,14 @@ export const VideoControl = (props: VideoControlProps) => {
                     </span>
                 </div>
                 <div className="control">
+                    <button type="button" className="btn btn-primary" onClick={props.backward}>
+                        <FontAwesomeIcon icon={faBackward} size="2x" />
+                    </button>
                     <button type="button" className="btn btn-primary" onClick={props.togglePlay}>
                         <FontAwesomeIcon icon={props.isPlaying ? faPause : faPlay} size="3x" />
+                    </button>
+                    <button type="button" className="btn btn-primary" onClick={props.forward}>
+                        <FontAwesomeIcon icon={faForward} size="2x" />
                     </button>
                 </div>
                 <div className="control">
@@ -83,7 +112,9 @@ interface VideoControlProps {
     isPlaying: boolean;
     isMuted: boolean;
     isInFullscreen: boolean;
+    backward: () => void;
     togglePlay: () => void;
+    forward: () => void;
     toggleMute: () => void;
     toggleFullscreen: () => void;
     skip: (timeInSeconds: number) => void;

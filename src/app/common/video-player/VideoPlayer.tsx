@@ -23,8 +23,10 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     useEffect(() => {
         const videoPlayerElement = videoPlayerElementRef.current;
         videoPlayerElement?.addEventListener('webkitfullscreenchange', onFullscreenModeChanged);
-        return () => videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged);
+        return () => videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged)
     }, []);
+
+    const onFullscreenModeChanged = () => setIsInFullScreenMode(!!document.fullscreenElement);
 
     const onLoaded = () => {
         setTotalTime(videoElementRef.current?.duration || 0);
@@ -40,10 +42,6 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
 
     const onEnded = () => {
         setIsPlaying(false);
-    }
-
-    const onFullscreenModeChanged = () => {
-        setIsInFullScreenMode(!!document.fullscreenElement);
     }
 
     // Behaviors
@@ -143,7 +141,9 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 isPlaying={isPlaying}
                 isMuted={isMuted}
                 isInFullscreen={isInFullScreenMode}
+                backward={backward}
                 togglePlay={togglePlay}
+                forward={forward}
                 toggleMute={toggleMute}
                 toggleFullscreen={toggleFullscreen}
                 skip={skip}></VideoControl>
