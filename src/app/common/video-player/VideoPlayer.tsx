@@ -97,18 +97,24 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
      * 
      * @param timeInSeconds time to be set
      */
-    const skipToTimePoint = (timeInSeconds: number) => {
+    const skip = (timeInSeconds: number) => {
         if (videoElementRef.current)
             videoElementRef.current.currentTime = timeInSeconds;
 
         setCurrentTime(timeInSeconds);
     }
 
+    /**
+     * Skips time 10 seconds backwards
+     */
     const backward = () => {
         if (currentTime > 10 && videoElementRef.current)
             videoElementRef.current.currentTime -= 10;
     }
 
+    /**
+     * Skips time 10 seconds forwards
+     */
     const forward = () => {
         if ((totalTime - currentTime) > 10 && videoElementRef.current)
             videoElementRef.current.currentTime += 10;
@@ -129,7 +135,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
             </video>
 
             { !isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
-            <VideoOverlayControl isPlaying={isPlaying} backward={ backward} togglePlay={togglePlay} forward={forward}></VideoOverlayControl>
+            <VideoOverlayControl isPlaying={isPlaying} backward={backward} togglePlay={togglePlay} forward={forward}></VideoOverlayControl>
             <VideoTitle title={props.videoInfo.title}></VideoTitle>
             <VideoControl
                 currentTime={currentTime}
@@ -140,7 +146,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 togglePlay={togglePlay}
                 toggleMute={toggleMute}
                 toggleFullscreen={toggleFullscreen}
-                skipToTimePoint={skipToTimePoint}></VideoControl>
+                skip={skip}></VideoControl>
         </div >
     );
 }

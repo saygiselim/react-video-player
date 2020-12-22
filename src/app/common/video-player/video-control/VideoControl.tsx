@@ -40,7 +40,7 @@ export const VideoControl = (props: VideoControlProps) => {
     const onBarClicked = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const percentage = (event.nativeEvent.offsetX / event.currentTarget.offsetWidth) * 100;
 
-        props.skipToTimePoint(getTimePoint(percentage));
+        props.skip(getTimePoint(percentage));
     }
 
     return (
@@ -86,5 +86,5 @@ interface VideoControlProps {
     togglePlay: () => void;
     toggleMute: () => void;
     toggleFullscreen: () => void;
-    skipToTimePoint: (timeInSeconds: number) => void;
+    skip: (timeInSeconds: number) => void;
 }
