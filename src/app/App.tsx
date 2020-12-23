@@ -3,15 +3,16 @@ import React, { useState } from 'react';
 import './App.scss';
 
 import { Dropdown } from './common/dropdown/Dropdown';
+import { ImageSelect } from './common/image-select/ImageSelect';
 import { VideoPlayer, VideoInfo, VideoPlayerTheme } from './common/video-player/VideoPlayer';
 
 export const App = () => {
   const themeOptions = [
     { text: 'Red', value: VideoPlayerTheme.Red },
     { text: 'Green', value: VideoPlayerTheme.Green },
-    { text: 'Blue', value: VideoPlayerTheme.Blue },
+    { text: 'Blue', value: VideoPlayerTheme.Blue }
   ];
-  const [theme, setTheme] = useState(themeOptions[0].value);
+  const [currentTheme, setCurrentTheme] = useState(themeOptions[2]);
 
   const videoInfos: VideoInfo[] = [
     {
@@ -30,26 +31,35 @@ export const App = () => {
       videoSrc: 'http://media.xiph.org/mango/tears_of_steel_1080p.webm'
     }
   ];
-  const [videoInfo, setVideoInfo] = useState(videoInfos[0]);
+  const [currentVideoInfo, setCurrentVideoInfo] = useState(videoInfos[1]);
 
   return (
     <div className="app">
       <header className="header">
         React Video Player
       </header>
-      <hr />
       <section className="body">
-        <VideoPlayer videoInfo={videoInfo} theme={theme}></VideoPlayer>
+        <VideoPlayer videoInfo={currentVideoInfo} theme={currentTheme.value} />
         <fieldset className="preferences">
           <legend>Preferences</legend>
-          <Dropdown label="Theme" options={themeOptions} textProperty="text" onSelect={option => setTheme(option.value)}></Dropdown>
-          <Dropdown label="Video" options={videoInfos} textProperty="title" onSelect={option => setVideoInfo(option)}></Dropdown>
+          <Dropdown
+            label="Theme"
+            options={themeOptions}
+            textProperty="text"
+            selectedOption={currentTheme}
+            onSelect={option => setCurrentTheme(option)} />
+          <hr />
+          <ImageSelect
+            options={videoInfos}
+            imageProperty="posterSrc"
+            titleProperty="title"
+            selectedOption={currentVideoInfo}
+            onSelect={option => setCurrentVideoInfo(option)} />
         </fieldset>
       </section>
-      <hr />
       <footer className="footer">
         Video © Copyright Blender Foundation | <a href="https://www.blender.org/about/projects/" target="_blank" rel="noreferrer">https://www.blender.org</a>
       </footer>
-    </div>
+    </div >
   )
 }

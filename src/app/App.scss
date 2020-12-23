@@ -1,20 +1,29 @@
 .app {
+    margin: 20px 0;
+    color: #fefefe;
     .header {
-        color: #222222;
         text-align: center;
         font-weight: bold;
         font-size: 24px;
-        margin: 10px;
     }
 
     .body {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 50px;
+        margin: 20px 0;
+
+        .preferences {
+            margin-top: 10px;
+        }
     }
 
     .footer {
+        font-weight: bold;
         text-align: center;
+
+        a {
+            color: #03a9f4;
+        }
     }
 }

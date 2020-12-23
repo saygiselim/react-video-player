@@ -6,25 +6,31 @@ import { faBackward, faCompress, faExpand, faForward, faPause, faPlay, faVolumeM
 import './VideoControl.scss';
 
 export const VideoControl = (props: VideoControlProps) => {
+    const { currentTime, totalTime, isPlaying, isMuted, isFullscreen, skipBackward, togglePlay, skipForward, toggleMute, toggleFullscreen, skip } = props;
+
     useEffect(() => {
+        const onKeydown = (event: KeyboardEvent) => {
+            switch (event.key) {
+                case 'ArrowLeft':
+                    skipBackward();
+                    break;
+
+                case ' ':
+                    togglePlay();
+                    break;
+
+                case 'ArrowRight':
+                    skipForward();
+                    break;
+            }
+        }
+
         document.addEventListener('keydown', onKeydown);
         return () => document.removeEventListener('keydown', onKeydown);
-    }, [props.isPlaying, props.currentTime, props.totalTime]);
+    }, [skipBackward, togglePlay, skipForward, currentTime, totalTime, isPlaying]);
 
-    const onKeydown = (event: KeyboardEvent) => {
-        switch (event.key) {
-            case 'ArrowLeft':
-                props.backward();
-                break;
-
-            case ' ':
-                props.togglePlay();
-                break;
-
-            case 'ArrowRight':
-                props.forward();
-                break;
-        }      
+    const onBarClicked = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        skip(getClickedTimePoint(event));
     }
 
     /**
@@ -45,25 +51,21 @@ export const VideoControl = (props: VideoControlProps) => {
     }
 
     /**
-     * Returns progress bar width as percentage based on the current time to represent remaining time on the bar
+     * Returns seekbar width as percentage based on the current time to represent remaining time on the bar
      */
     const getCurrentBarWidth = () => {
-        return `${(props.currentTime / props.totalTime) * 100}%`;
+        return `${(currentTime / totalTime) * 100}%`;
     }
 
     /**
-     * Returns a point in time based on the percentage provided
+     * Returns a point in time based on the clicked point on the seekbar
      * 
-     * @param percentage time percentage
+     * @param event mouse event
      */
-    const getTimePoint = (percentage: number) => {
-        return Math.round((percentage * props.totalTime) / 100);
-    }
-
-    const onBarClicked = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const getClickedTimePoint = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const percentage = (event.nativeEvent.offsetX / event.currentTarget.offsetWidth) * 100;
 
-        props.skip(getTimePoint(percentage));
+        return Math.round((percentage * totalTime) / 100);
     }
 
     return (
@@ -75,30 +77,30 @@ export const VideoControl = (props: VideoControlProps) => {
             </div>
             <div className="control-wrapper">
                 <div className="control">
-                    <button type="button" className="btn" onClick={props.toggleMute}>
-                        <FontAwesomeIcon icon={props.isMuted ? faVolumeMute : faVolumeUp} />
+                    <button type="button" className="btn" onClick={toggleMute}>
+                        <FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp} />
                     </button>
                     <span className="time">
-                        {getFormattedTime(props.currentTime)}
+                        {getFormattedTime(currentTime)}
                     </span>
                 </div>
                 <div className="control">
-                    <button type="button" className="btn btn-primary" onClick={props.backward}>
+                    <button type="button" className="btn btn-primary" onClick={skipBackward}>
                         <FontAwesomeIcon icon={faBackward} size="2x" />
                     </button>
-                    <button type="button" className="btn btn-primary" onClick={props.togglePlay}>
-                        <FontAwesomeIcon icon={props.isPlaying ? faPause : faPlay} size="3x" />
+                    <button type="button" className="btn btn-primary" onClick={togglePlay}>
+                        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} size="3x" />
                     </button>
-                    <button type="button" className="btn btn-primary" onClick={props.forward}>
+                    <button type="button" className="btn btn-primary" onClick={skipForward}>
                         <FontAwesomeIcon icon={faForward} size="2x" />
                     </button>
                 </div>
                 <div className="control">
                     <span className="time">
-                        {getFormattedTime(props.totalTime)}
+                        {getFormattedTime(totalTime)}
                     </span>
-                    <button type="button" className="btn" onClick={props.toggleFullscreen}>
-                        <FontAwesomeIcon icon={props.isInFullscreen ? faCompress : faExpand} />
+                    <button type="button" className="btn" onClick={toggleFullscreen}>
+                        <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
                     </button>
                 </div>
             </div>
@@ -111,10 +113,10 @@ interface VideoControlProps {
     totalTime: number;
     isPlaying: boolean;
     isMuted: boolean;
-    isInFullscreen: boolean;
-    backward: () => void;
+    isFullscreen: boolean;
+    skipBackward: () => void;
     togglePlay: () => void;
-    forward: () => void;
+    skipForward: () => void;
     toggleMute: () => void;
     toggleFullscreen: () => void;
     skip: (timeInSeconds: number) => void;

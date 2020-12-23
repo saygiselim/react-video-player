@@ -3,19 +3,24 @@
     align-items: baseline;
 
     .label {
-        color: #222222;
+        color: #FEFEFE;
         font-weight: bold;
         margin-right: 3px;
     }
     
     .select {
         padding: 5px;
-        color: #222222;
+        color: #FEFEFE;
         font-weight: bold;
         cursor: pointer;
         border: none;
         background: none;
         text-overflow: ellipsis;
+
+        option {
+            padding: 5px;
+            background:#181818;
+        }
 
         &:focus {
             outline: none;

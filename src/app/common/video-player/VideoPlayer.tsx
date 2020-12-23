@@ -8,9 +8,12 @@ import { VideoControl } from "./video-control/VideoControl";
 import { VideoOverlayControl } from "./video-overlay-control/VideoOverlayControl";
 
 export const VideoPlayer = (props: VideoPlayerProps) => {
+    const SKIP_AMOUNT_IN_SEC = 10;
+    const MOUSE_IDLE_TIMEOUT_IN_MS = 5000;
+
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
-    const [isInFullScreenMode, setIsInFullScreenMode] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
     const [totalTime, setTotalTime] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [isMouseInIdle, setIsMouseInIdle] = useState(false);
@@ -24,12 +27,12 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     useEffect(() => setIsPlaying(false), [props.videoInfo]);
 
     useEffect(() => {
+        const onFullscreenModeChanged = () => setIsFullScreen(!!document.fullscreenElement);
+
         const videoPlayerElement = videoPlayerElementRef.current;
         videoPlayerElement?.addEventListener('webkitfullscreenchange', onFullscreenModeChanged);
         return () => videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged)
-    }, []);
-
-    const onFullscreenModeChanged = () => setIsInFullScreenMode(!!document.fullscreenElement);
+    }, [videoPlayerElementRef]);
 
     const onLoaded = () => {
         setTotalTime(videoElementRef.current?.duration || 0);
@@ -48,12 +51,12 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     }
 
     const onMouseMoved = () => {
-        setIsMouseInIdle(false);
-
         if (mouseIdleTimeout)
             clearTimeout(mouseIdleTimeout);
 
-        mouseIdleTimeout = setTimeout(() => setIsMouseInIdle(true), 5000);
+        setIsMouseInIdle(false);
+
+        mouseIdleTimeout = setTimeout(() => setIsMouseInIdle(true), MOUSE_IDLE_TIMEOUT_IN_MS);
     }
 
     // Behaviors
@@ -73,7 +76,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
         setIsPlaying(false);
     }
 
-    /**
+    /**     
      * Toggles play state
      */
     const togglePlay = () => {
@@ -99,7 +102,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
      * for more information: https://developer.mozilla.org/en-US/docs/Web/API/Document/fullscreen
      */
     const toggleFullscreen = () => {
-        !isInFullScreenMode ? (videoPlayerElementRef.current as any).webkitRequestFullScreen() : (document as any).webkitCancelFullScreen();
+        !isFullScreen ? (videoPlayerElementRef.current as any).webkitRequestFullScreen() : (document as any).webkitCancelFullScreen();
     }
 
     /**
@@ -115,25 +118,25 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     }
 
     /**
-     * Skips time 10 seconds backwards
+     * Skips backward
      */
-    const backward = () => {
-        if (currentTime > 10 && videoElementRef.current)
-            videoElementRef.current.currentTime -= 10;
+    const skipBackward = () => {
+        if (currentTime > SKIP_AMOUNT_IN_SEC)
+            skip(currentTime - SKIP_AMOUNT_IN_SEC);
     }
 
     /**
-     * Skips time 10 seconds forwards
+     * Skips forward
      */
-    const forward = () => {
-        if ((totalTime - currentTime) > 10 && videoElementRef.current)
-            videoElementRef.current.currentTime += 10;
+    const skipForward = () => {
+        if ((totalTime - currentTime) > SKIP_AMOUNT_IN_SEC)
+            skip(currentTime + SKIP_AMOUNT_IN_SEC);
     }
 
     return (
         <div
             ref={videoPlayerElementRef}
-            className={`video-player theme theme-${props.theme}`} >
+            className={`video-player theme theme-${props.theme} ${isFullScreen ? 'is-fullscreen' : ''}`} >
             <video
                 ref={videoElementRef}
                 src={props.videoInfo.videoSrc}
@@ -144,18 +147,18 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 Sorry, Your browser does not support HTML5 video feature
             </video>
             {!isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
-            <div className={`video-overlay ${isMouseInIdle ? 'video-overlay--hidden' : ''}`} onMouseMove={onMouseMoved}>
-                <VideoOverlayControl isPlaying={isPlaying} backward={backward} togglePlay={togglePlay} forward={forward}></VideoOverlayControl>
+            <div className={`video-overlay ${isMouseInIdle ? 'is-hidden' : ''}`} onMouseMove={onMouseMoved}>
+                <VideoOverlayControl isPlaying={isPlaying} skipBackward={skipBackward} togglePlay={togglePlay} skipForward={skipForward}></VideoOverlayControl>
                 <VideoTitle title={props.videoInfo.title}></VideoTitle>
                 <VideoControl
                     currentTime={currentTime}
                     totalTime={totalTime}
                     isPlaying={isPlaying}
                     isMuted={isMuted}
-                    isInFullscreen={isInFullScreenMode}
-                    backward={backward}
+                    isFullscreen={isFullScreen}
+                    skipBackward={skipBackward}
                     togglePlay={togglePlay}
-                    forward={forward}
+                    skipForward={skipForward}
                     toggleMute={toggleMute}
                     toggleFullscreen={toggleFullscreen}
                     skip={skip}></VideoControl>

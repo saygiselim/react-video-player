@@ -6,13 +6,13 @@ import './VideoOverlayControl.scss';
 export const VideoOverlayControl = (props: VideoOverlayControlProps) => {
     return (
         <div className="video-overlay-control">
-            <div className="control" onDoubleClick={props.backward}>
+            <div className="control" onDoubleClick={props.skipBackward}>
                 <FontAwesomeIcon icon={faBackward} size="3x" />
             </div>
             <div className="control" onClick={props.togglePlay}>
                 <FontAwesomeIcon icon={props.isPlaying ? faPause : faPlay} size="6x" />
             </div>
-            <div className="control" onDoubleClick={props.forward}>
+            <div className="control" onDoubleClick={props.skipForward}>
                 <FontAwesomeIcon icon={faForward} size="3x" />
             </div>
         </div>
@@ -21,7 +21,7 @@ export const VideoOverlayControl = (props: VideoOverlayControlProps) => {
 
 interface VideoOverlayControlProps {
     isPlaying: boolean;
-    backward: () => void;
+    skipBackward: () => void;
     togglePlay: () => void;
-    forward: () => void;
+    skipForward: () => void;
 }
