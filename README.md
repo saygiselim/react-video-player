@@ -38,7 +38,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `npm run deploy`
 
-Builds and deploy the app to the dedicated github page
+Builds and deploys the app to the dedicated github page
 
 ## Built With
 
