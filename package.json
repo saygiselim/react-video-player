@@ -1,7 +1,7 @@
 {
   "name": "react-video-player",
   "version": "1.0.0",
-  "homepage": "https://saygiselim.github.io/react-video-player/",
+  "homepage": "/react-video-player/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
