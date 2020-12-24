@@ -46,14 +46,14 @@ export const App = () => {
             label="Theme"
             options={themeOptions}
             textProperty="text"
-            selectedOption={themeOptions[2]}
+            selectedIndex={2}
             onSelect={option => setCurrentTheme(option)} />
           <hr />
           <ImageSelect
             options={videoInfos}
             imageProperty="posterSrc"
             titleProperty="title"
-            selectedOption={videoInfos[1]}
+            selectedIndex={1}
             onSelect={option => setCurrentVideoInfo(option)} />
         </fieldset>
       </section>

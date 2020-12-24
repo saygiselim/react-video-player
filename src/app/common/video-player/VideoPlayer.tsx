@@ -21,19 +21,21 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     let videoPlayerElementRef = useRef<HTMLDivElement>(null);
     let videoElementRef = useRef<HTMLVideoElement>(null);
 
-    let mouseIdleTimeoutId: NodeJS.Timeout;
-
     // Events
     useEffect(() => setIsPlaying(false), [props.videoInfo]);
 
     useEffect(() => {
+        let mouseIdleTimeoutId: NodeJS.Timeout;
         const onFullscreenModeChanged = () => setIsFullScreen(!!document.fullscreenElement);
-        const onMouseMove = () => resetMouseIdleTimer();
+        const onMouseMove = () => {
+            clearTimeout(mouseIdleTimeoutId);
+            setIsMouseInIdleState(false);
+            mouseIdleTimeoutId = setTimeout(() => setIsMouseInIdleState(true), MOUSE_IDLE_TIMEOUT_IN_MS);
+        }
 
         const videoPlayerElement = videoPlayerElementRef.current;
         videoPlayerElement?.addEventListener('webkitfullscreenchange', onFullscreenModeChanged);
         videoPlayerElement?.addEventListener('mousemove', onMouseMove);
-        console.log('events added');
         return () => {
             videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged);
             videoPlayerElement?.addEventListener('mousemove', onMouseMove);
@@ -116,15 +118,6 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     const skipForward = () => {
         if ((totalTime - currentTime) > SKIP_AMOUNT_IN_SEC)
             skip(currentTime + SKIP_AMOUNT_IN_SEC);
-    }
-
-    /**
-     * Resets mouse idle timer
-     */
-    const resetMouseIdleTimer = () => {
-        clearTimeout(mouseIdleTimeoutId);
-        setIsMouseInIdleState(false);
-        mouseIdleTimeoutId = setTimeout(() => setIsMouseInIdleState(true), MOUSE_IDLE_TIMEOUT_IN_MS);
     }
 
     return (

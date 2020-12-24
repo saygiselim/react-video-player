@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react';
-
+import { useState } from 'react';
 import './ImageSelect.scss';
 
 export const ImageSelect = (props: ImageSelectProps) => {
-    const [selectedOption, setSelectedOption] = useState(props.selectedOption);
+    const [selectedIndex, setSelectedIndex] = useState(props.selectedIndex);
 
-    useEffect(() => {
-        if (selectedOption)
-            props.onSelect(selectedOption);
-    }, [selectedOption]);
+    const selectOption = (option: any, index: number) => {
+        setSelectedIndex(index);
+        props.onSelect(option);
+    }
 
     return (
         <div className="image-select">
@@ -16,8 +15,8 @@ export const ImageSelect = (props: ImageSelectProps) => {
                 props.options.map((option, index) =>
                     <div
                         key={index}
-                        className={`option ${option[props.imageProperty] === selectedOption[props.imageProperty] ? 'is-selected' : ''}`}
-                        onClick={() => setSelectedOption(option)}
+                        className={`option ${index === selectedIndex ? 'is-selected' : ''}`}
+                        onClick={() => selectOption(option, index)}
                         title={option[props.titleProperty]}>
                         <img
                             src={option[props.imageProperty]}
@@ -33,6 +32,6 @@ interface ImageSelectProps {
     options: any[];
     imageProperty: string;
     titleProperty: string;
-    selectedOption?: any;
+    selectedIndex?: number;
     onSelect: (option: any) => void;
 }

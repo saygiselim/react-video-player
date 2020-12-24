@@ -1,15 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import './Dropdown.scss';
 
 export const Dropdown = (props: DropdownProps) => {
-    const [selectedOption, setSelectedOption] = useState(props.selectedOption);
-
-    useEffect(() => {
-        if (selectedOption)
-            props.onSelect(selectedOption);
-    }, [selectedOption])
-
     return (
         <div className="dropdown">
             <label className="label">
@@ -17,8 +8,8 @@ export const Dropdown = (props: DropdownProps) => {
             </label>
             <select
                 className="select"
-                onChange={event => setSelectedOption(props.options[+event.target.value])}
-                defaultValue={props.options.indexOf(selectedOption)}>
+                onChange={event => props.onSelect(props.options[+event.target.value])}
+                defaultValue={props.selectedIndex}>
                 {
                     props.options.map(
                         (option, index) =>
@@ -38,6 +29,6 @@ interface DropdownProps {
     label: string;
     options: any[];
     textProperty: string;
-    selectedOption?: any;
+    selectedIndex?: number;
     onSelect: (option: any) => void;
 }
