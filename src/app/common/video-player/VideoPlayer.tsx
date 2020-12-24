@@ -8,7 +8,7 @@ import { VideoControl } from "./video-control/VideoControl";
 import { VideoOverlayControl } from "./video-overlay-control/VideoOverlayControl";
 
 export const VideoPlayer = (props: VideoPlayerProps) => {
-    const SKIP_AMOUNT_IN_SEC = 10;
+    const SKIP_AMOUNT_IN_SEC = 30;
     const MOUSE_IDLE_TIMEOUT_IN_MS = 5000;
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -16,48 +16,37 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [totalTime, setTotalTime] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
-    const [isMouseInIdle, setIsMouseInIdle] = useState(false);
+    const [isMouseInIdleState, setIsMouseInIdleState] = useState(false);
 
     let videoPlayerElementRef = useRef<HTMLDivElement>(null);
     let videoElementRef = useRef<HTMLVideoElement>(null);
 
-    let mouseIdleTimeout: NodeJS.Timeout;
+    let mouseIdleTimeoutId: NodeJS.Timeout;
 
     // Events
     useEffect(() => setIsPlaying(false), [props.videoInfo]);
 
     useEffect(() => {
         const onFullscreenModeChanged = () => setIsFullScreen(!!document.fullscreenElement);
+        const onMouseMove = () => resetMouseIdleTimer();
 
         const videoPlayerElement = videoPlayerElementRef.current;
         videoPlayerElement?.addEventListener('webkitfullscreenchange', onFullscreenModeChanged);
-        return () => videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged)
+        videoPlayerElement?.addEventListener('mousemove', onMouseMove);
+        console.log('events added');
+        return () => {
+            videoPlayerElement?.removeEventListener('webkitfullscreenchange', onFullscreenModeChanged);
+            videoPlayerElement?.addEventListener('mousemove', onMouseMove);
+        }
     }, [videoPlayerElementRef]);
 
-    const onLoaded = () => {
-        setTotalTime(videoElementRef.current?.duration || 0);
-    }
+    const onLoaded = () => setTotalTime(videoElementRef.current?.duration || 0);
 
-    const onPlaying = () => {
-        setIsPlaying(true);
-    }
+    const onPlaying = () => setIsPlaying(true);
 
-    const onTimeUpdated = () => {
-        setCurrentTime(videoElementRef.current?.currentTime || 0);
-    }
+    const onTimeUpdated = () => setCurrentTime(videoElementRef.current?.currentTime || 0);
 
-    const onEnded = () => {
-        setIsPlaying(false);
-    }
-
-    const onMouseMoved = () => {
-        if (mouseIdleTimeout)
-            clearTimeout(mouseIdleTimeout);
-
-        setIsMouseInIdle(false);
-
-        mouseIdleTimeout = setTimeout(() => setIsMouseInIdle(true), MOUSE_IDLE_TIMEOUT_IN_MS);
-    }
+    const onEnded = () => setIsPlaying(false);
 
     // Behaviors
     /**
@@ -79,9 +68,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     /**     
      * Toggles play state
      */
-    const togglePlay = () => {
-        isPlaying ? pause() : play();
-    }
+    const togglePlay = () => isPlaying ? pause() : play();
 
     /**
      * Toggles volume mode
@@ -101,9 +88,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
      * 
      * for more information: https://developer.mozilla.org/en-US/docs/Web/API/Document/fullscreen
      */
-    const toggleFullscreen = () => {
-        !isFullScreen ? (videoPlayerElementRef.current as any).webkitRequestFullScreen() : (document as any).webkitCancelFullScreen();
-    }
+    const toggleFullscreen = () => !isFullScreen ? (videoPlayerElementRef.current as any).webkitRequestFullScreen() : (document as any).webkitCancelFullScreen();
 
     /**
      * Sets current time to the given second value
@@ -133,10 +118,19 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
             skip(currentTime + SKIP_AMOUNT_IN_SEC);
     }
 
+    /**
+     * Resets mouse idle timer
+     */
+    const resetMouseIdleTimer = () => {
+        clearTimeout(mouseIdleTimeoutId);
+        setIsMouseInIdleState(false);
+        mouseIdleTimeoutId = setTimeout(() => setIsMouseInIdleState(true), MOUSE_IDLE_TIMEOUT_IN_MS);
+    }
+
     return (
         <div
             ref={videoPlayerElementRef}
-            className={`video-player theme theme-${props.theme} ${isFullScreen ? 'is-fullscreen' : ''}`} >
+            className={`video-player theme theme-${props.theme} ${isFullScreen ? 'is-fullscreen' : ''}`}>
             <video
                 ref={videoElementRef}
                 src={props.videoInfo.videoSrc}
@@ -147,7 +141,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
                 Sorry, Your browser does not support HTML5 video feature
             </video>
             {!isPlaying && currentTime === 0 ? <VideoPoster source={props.videoInfo.posterSrc}></VideoPoster> : null}
-            <div className={`video-overlay ${isMouseInIdle ? 'is-hidden' : ''}`} onMouseMove={onMouseMoved}>
+            <div className={`video-overlay ${isMouseInIdleState ? 'is-hidden' : ''}`}>
                 <VideoOverlayControl isPlaying={isPlaying} skipBackward={skipBackward} togglePlay={togglePlay} skipForward={skipForward}></VideoOverlayControl>
                 <VideoTitle title={props.videoInfo.title}></VideoTitle>
                 <VideoControl
