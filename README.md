@@ -46,4 +46,4 @@ Builds and deploys the app to the dedicated github page
 - [Create React App](https://create-react-app.dev/) - A tool for creating React apps with no build configuration.
 - [Typescript](https://www.typescriptlang.org/) - Static types for javascript
 - [SASS](https://sass-lang.com/) - CSS preprocessor
-- [HTML5 Video](https://www.w3schools.com/html/html5_video.asp)
+- [HTML5 Video](https://www.w3schools.com/html/html5_video.asp) - The HTML element is used to show a video on a web page.
