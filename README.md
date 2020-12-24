@@ -34,12 +34,6 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-## Deployment
-
-### `npm run deploy`
-
-Builds and deploys the app to the dedicated github page-
-
 ## Built With
 
 - [React](https://reactjs.org/) - A JavaScript library for building user interfaces
