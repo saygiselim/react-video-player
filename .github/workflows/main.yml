@@ -1,4 +1,4 @@
-name: Github Pages Build
+name: github-pages-build
 
 on:
   push:

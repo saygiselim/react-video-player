@@ -2,11 +2,11 @@
 
 A HTML5 video player built with React.
 
-[![Status](https://github.com/saygiselim/react-video-player/workflows/CI-GP/badge.svg)](https://github.com/saygiselim/react-video-player/actions)
-
 ## Try it
 
 - https://saygiselim.github.io/react-video-player/
+
+[![Status](https://github.com/saygiselim/react-video-player/workflows/github-pages-build/badge.svg)](https://github.com/saygiselim/react-video-player/actions)
 
 ## Prerequisites
 
