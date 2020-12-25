@@ -1,12 +1,13 @@
+
 # React Video Player
+
+[![Status](https://github.com/saygiselim/react-video-player/workflows/github-pages-build/badge.svg)](https://github.com/saygiselim/react-video-player/actions)
 
 A HTML5 video player built with React.
 
 ## Try it
 
-- https://saygiselim.github.io/react-video-player/
-
-[![Status](https://github.com/saygiselim/react-video-player/workflows/github-pages-build/badge.svg)](https://github.com/saygiselim/react-video-player/actions)
+- [React Video Player](https://saygiselim.github.io/react-video-player/)
 
 ## Prerequisites
 
